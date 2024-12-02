@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
-from babel.numbers import format_currency
+# from babel.numbers import format_currency
 import io, calendar
 import os
 sns.set(style='dark')
@@ -106,7 +106,7 @@ def create_bike_count_by_month_data(data):
 
 
 # Load Data
-absolute_path = os.path.join(os.getcwd(), "Dashboard/merged_data.csv")
+absolute_path = os.path.join(os.getcwd(), "merged_data.csv")
 data = pd.read_csv(absolute_path)
 
 # Convert datetime columns
