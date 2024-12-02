@@ -60,7 +60,7 @@ Alternatively, if you prefer Anaconda, launch it from your environment.
 ---
 
 ### Step 5: View the Dashboard
-Locally
+##### Locally
 The project includes a Streamlit dashboard. Follow these steps to run it:
 
 1. Navigate to the `Dashboard` directory:
@@ -75,7 +75,7 @@ The project includes a Streamlit dashboard. Follow these steps to run it:
 
 3. Open the displayed URL in your browser to view the dashboard.
 
-Online : https://dataanalystsimiao.streamlit.app/
+##### Online : https://dataanalystsimiao.streamlit.app/
 
 
 ---
