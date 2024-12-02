@@ -4,6 +4,7 @@ import seaborn as sns
 import streamlit as st
 from babel.numbers import format_currency
 import io, calendar
+import os
 sns.set(style='dark')
 
 # Main Header
@@ -105,7 +106,8 @@ def create_bike_count_by_month_data(data):
 
 
 # Load Data
-data = pd.read_csv("merged_data.csv")
+absolute_path = os.path.join(os.getcwd(), "Dashboard/merged_data.csv")
+data = pd.read_csv(absolute_path)
 
 # Convert datetime columns
 data['dteday'] = pd.to_datetime(data['dteday'])
