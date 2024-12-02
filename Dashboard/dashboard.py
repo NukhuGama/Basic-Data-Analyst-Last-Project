@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
 from babel.numbers import format_currency
-import io
+import io, calendar
 sns.set(style='dark')
 
 # Main Header
@@ -27,12 +27,23 @@ def create_daily_bike_count_data(data):
 
 # Create bike count by weather type DataFrame
 def create_bike_count_by_weather_data(data):
-    bike_count_by_weather_data = data.groupby("weather")["cnt"].sum().reset_index()
+    # Mapping Weather Description
+    weather_desc = {
+        1: 'Clear/Few Clouds',  
+        2: 'Mist/Cloudy',
+        3: 'Rain/Snow',
+        4: 'Thunderstorm'
+    }
+    # Replace Weather  numbers with weather descriptions
+    data['weathersit'] = data['weathersit'].map( weather_desc)
+
+    bike_count_by_weather_data = data.groupby("weathersit")["cnt"].sum().reset_index()
     bike_count_by_weather_data.rename(columns={
         "cnt": "total_bike_count"
     }, inplace=True)
     
     return bike_count_by_weather_data
+
 
 # Create bike count by hour DataFrame
 def create_bike_count_by_hour_data(data):
@@ -52,29 +63,39 @@ def create_bike_count_by_season_data(data):
     
     return bike_count_by_season_data
 
-def create_bike_count_by_weather_season_data(data):
+def create_bike_count_by_season_data(data):
     # Mapping of season numbers to weather types
-    season_to_weather = {
-        1: 'Clear/Few Clouds',  # Example mapping
-        2: 'Mist/Cloudy',
-        3: 'Rain/Snow',
-        4: 'Thunderstorm'
+    season_name = {
+        1: 'Springer',  # Example mapping
+        2: 'Summer',
+        3: 'Fall',
+        4: 'Winter'
     }
     
     # Replace season numbers with weather descriptions
-    data['weather'] = data['season'].map(season_to_weather)
+    data['season'] = data['season'].map(season_name)
     
     # Group by the new 'weather' column and aggregate the bike counts
-    bike_count_by_weather_season_data = data.groupby("weather")["cnt"].sum().reset_index()
-    bike_count_by_weather_season_data.rename(columns={
+    bike_count_by_season_data = data.groupby("season")["cnt"].sum().reset_index()
+    bike_count_by_season_data.rename(columns={
         "cnt": "total_bike_count"
     }, inplace=True)
     
-    return bike_count_by_weather_season_data
+    return bike_count_by_season_data
 
 # Create bike count by month DataFrame
 def create_bike_count_by_month_data(data):
+    
     bike_count_by_month_data = data.groupby("mnth")["cnt"].sum().reset_index()
+    # Map month numbers to month names
+    month_mapping = {
+        1: "January", 2: "February", 3: "March", 4: "April", 
+        5: "May", 6: "June", 7: "July", 8: "August", 
+        9: "September", 10: "October", 11: "November", 12: "December"
+    }
+    bike_count_by_month_data["mnth"] = bike_count_by_month_data["mnth"].map(month_mapping)
+    # bike_count_by_month_data["mnth"] = bike_count_by_month_data["mnth"].apply(lambda x: calendar.month_name[x])
+
     bike_count_by_month_data.rename(columns={
         "cnt": "total_bike_count"
     }, inplace=True)
@@ -98,7 +119,7 @@ with st.sidebar:
    
     # Sidebar for user interaction
 
-    st.title("Last Project - Simião S.")
+    st.title(" Simião S.")
     st.title("📊 Dashboard Options")
     # st.sidebar.title("")
     st.header("Bike Sharing Data Analysis")
@@ -179,21 +200,30 @@ bike_count_by_weather_data = create_bike_count_by_weather_data(main_data)
 bike_count_by_hour_data = create_bike_count_by_hour_data(main_data)
 bike_count_by_season_data = create_bike_count_by_season_data(main_data)
 bike_count_by_month_data = create_bike_count_by_month_data(main_data)
-bike_count_by_weather_season_data = create_bike_count_by_weather_season_data(main_data)
+# bike_count_by_weather_season_data = create_bike_count_by_weather_season_data(main_data)
 
 
 # Visualize Daily Bike Counts
-st.subheader(f"📈 Analysis for Selected Dates: {start_date} to {end_date}")
+# st.subheader(f"📈 Analysis for Selected Dates: {start_date} to {end_date}")
+# Format the dates to "Day Month Year" format
+formatted_start_date = start_date.strftime("%d %B %Y")
+formatted_end_date = end_date.strftime("%d %B %Y")
+
+
 st.subheader('Daily Bike Counts')
+# Update the subheader with the formatted dates
+st.write(f"📈 Analysis for Selected Dates: {formatted_start_date} to {formatted_end_date}")
 col1, col2 = st.columns(2)
 
 with col1:
     total_bikes = daily_bike_count_data.total_bike_count.sum()
-    st.metric("Total Bikes Rented", value=total_bikes)
+    formatted_total_bikes = f"{total_bikes:,}"
+    st.metric("Total Bikes Rented", value=formatted_total_bikes)
 
 with col2:
     total_registered_bikes = daily_bike_count_data.registered_bike_count.sum()
-    st.metric("Total Registered Bikes", value=total_registered_bikes)
+    formated_total_registered_bikes = f"{total_registered_bikes:,}"
+    st.metric("Total Registered Bikes", value=formated_total_registered_bikes)
 
 fig, ax = plt.subplots(figsize=(16, 8))
 ax.plot(
@@ -211,7 +241,10 @@ st.pyplot(fig)
 # Visualize Bike Counts by Weather Type
 st.subheader("Bike Count by Weather")
 fig, ax = plt.subplots(figsize=(10, 6))
-sns.barplot(x="total_bike_count", y="weather", data=bike_count_by_weather_data, palette="coolwarm", ax=ax)
+sns.barplot(x="total_bike_count", y="weathersit", data=bike_count_by_weather_data, palette="coolwarm", ax=ax)
+
+ax.set_xlabel("Total Bikes", fontsize=12)
+ax.set_ylabel("Weather", fontsize=12)
 ax.set_title("Total Bike Count by Weather", fontsize=18)
 st.pyplot(fig)
 
@@ -219,22 +252,50 @@ st.pyplot(fig)
 st.subheader("Bike Count by Hour")
 fig, ax = plt.subplots(figsize=(10, 6))
 sns.lineplot(x="hr", y="total_bike_count", data=bike_count_by_hour_data, marker='o', color="b", ax=ax)
+
+ax.set_xlabel("Hour", fontsize=12)
+ax.set_ylabel("Total Bikes", fontsize=12)
 ax.set_title("Bike Count by Hour", fontsize=18)
 st.pyplot(fig)
 
 # Visualize Bike Counts by Season
 st.subheader("Bike Count by Season")
 fig, ax = plt.subplots(figsize=(10, 6))
-sns.barplot(x="weather", y="total_bike_count", data=bike_count_by_weather_season_data, palette="viridis", ax=ax)
+sns.barplot(x="season", y="total_bike_count", data=bike_count_by_season_data, palette="viridis", ax=ax)
+
+# Update axis labels and title
+ax.set_xlabel("Season", fontsize=12)
+ax.set_ylabel("Total Bikes", fontsize=12)
 ax.set_title("Total Bike Count by Season", fontsize=18)
 st.pyplot(fig)
 
+
 # Visualize Bike Counts by Month
 st.subheader("Bike Count by Month")
+# fig, ax = plt.subplots(figsize=(10, 6))
+# sns.barplot(x="mnth", y="total_bike_count", data=bike_count_by_month_data, palette="Blues", ax=ax)
+# ax.set_title("Total Bike Count by Month", fontsize=18)
+# st.pyplot(fig)
 fig, ax = plt.subplots(figsize=(10, 6))
-sns.barplot(x="mnth", y="total_bike_count", data=bike_count_by_month_data, palette="Blues", ax=ax)
+sns.barplot(
+    x="mnth", 
+    y="total_bike_count", 
+    data=bike_count_by_month_data, 
+    palette="Blues", 
+    ax=ax
+)
+
+# Update axis labels and title
+ax.set_xlabel("Month", fontsize=12)
+ax.set_ylabel("Total Bikes", fontsize=12)
 ax.set_title("Total Bike Count by Month", fontsize=18)
+
+# Adjust tick labels for better readability
+ax.tick_params(axis='x', labelsize=9)
+ax.tick_params(axis='y', labelsize=9)
+
 st.pyplot(fig)
+
 
 # Caption for the app
 st.caption('Copyright (c) S.Salvador 2024')
