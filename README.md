@@ -106,13 +106,3 @@ Basic-Data-Analyst-Last-Project/
 ```
 
 ---
-
-### Contribution
-
-Feel free to fork this repository, make improvements, and submit a pull request. Your contributions are welcome!
-
----
-
-### License
-
-This project is licensed under the [MIT License](LICENSE).
