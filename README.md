@@ -1,4 +1,4 @@
-# Basic Data Analyst Last Project
+# Basic Data Analyst Project
 
 This project demonstrates basic data analysis and dashboard creation. Follow the instructions below to set up and run the project on your local environment.
 
