@@ -3,7 +3,8 @@
 This project demonstrates basic data analysis and dashboard creation. Follow the instructions below to set up and run the project on your local environment.
 
 ---
-
+## Project Output
+![Screenshot](img/screenshot.png)
 ## How to Run the Project
 
 ### Step 1: Clone the Repository
