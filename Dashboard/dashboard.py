@@ -56,13 +56,13 @@ def create_bike_count_by_hour_data(data):
     return bike_count_by_hour_data
 
 # Create bike count by season DataFrame
-def create_bike_count_by_season_data(data):
-    bike_count_by_season_data = data.groupby("season")["cnt"].sum().reset_index()
-    bike_count_by_season_data.rename(columns={
-        "cnt": "total_bike_count"
-    }, inplace=True)
+# def create_bike_count_by_season_data(data):
+#     bike_count_by_season_data = data.groupby("season")["cnt"].sum().reset_index()
+#     bike_count_by_season_data.rename(columns={
+#         "cnt": "total_bike_count"
+#     }, inplace=True)
     
-    return bike_count_by_season_data
+#     return bike_count_by_season_data
 
 def create_bike_count_by_season_data(data):
     # Mapping of season numbers to weather types
@@ -106,7 +106,8 @@ def create_bike_count_by_month_data(data):
 
 
 # Load Data
-absolute_path = os.path.join(os.getcwd(), "Dashboard/merged_data.csv")
+absolute_path = os.path.join(os.getcwd(), "Dashboard/merged_data.csv")   #It is Applied on Cloud Streamlit
+# absolute_path = os.path.join(os.getcwd(), "merged_data.csv") # Use this for local streamlit 
 data = pd.read_csv(absolute_path)
 
 # Convert datetime columns
