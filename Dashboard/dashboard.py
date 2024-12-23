@@ -106,8 +106,8 @@ def create_bike_count_by_month_data(data):
 
 
 # Load Data
-absolute_path = os.path.join(os.getcwd(), "Dashboard/merged_data.csv")   #It is Applied on Cloud Streamlit
-# absolute_path = os.path.join(os.getcwd(), "merged_data.csv") # Use this for local streamlit 
+# absolute_path = os.path.join(os.getcwd(), "Dashboard/merged_data.csv")   #It is Applied on Cloud Streamlit
+absolute_path = os.path.join(os.getcwd(), "merged_data.csv") # Use this for local streamlit 
 data = pd.read_csv(absolute_path)
 
 # Convert datetime columns
