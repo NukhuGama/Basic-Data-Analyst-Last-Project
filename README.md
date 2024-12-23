@@ -91,6 +91,12 @@ Ensure you have the following installed on your system:
 You can find the full list of dependencies in the `requirements.txt` file.
 
 ---
+### You can run on docker file 
+##### Run Docker Compose to build and start the container
+```
+docker-compose up
+```
+---
 
 ### Project Structure
 
